@@ -1,4 +1,4 @@
-import { ref, isRef, unRef } from '../ref'
+import { ref, isRef, unRef, proxyRefs } from '../ref'
 import { effect } from '../effect'
 import { isReactive, reactive } from '../index'
 
@@ -61,5 +61,27 @@ describe('ref', () => {
     const a = ref(1)
     expect(unRef(a)).toBe(1)
     expect(1).toBe(1)
+  })
+
+  it ('proxyRefs', () => {
+    const obj = {
+      a: ref(1),
+      b: 10
+    }
+    const proxyObj = proxyRefs(obj)
+
+    expect(obj.a.value).toBe(1)
+    expect(proxyObj.a).toBe(1)
+    expect(proxyObj.b).toBe(10)
+    
+    // 设置普通值
+    proxyObj.a = 10
+    expect(obj.a.value).toBe(10)
+    expect(proxyObj.a).toBe(10)
+
+    // 替换ref值
+    proxyObj.a = ref(20)
+    expect(obj.a.value).toBe(20)
+    expect(proxyObj.a).toBe(20)
   })
 })

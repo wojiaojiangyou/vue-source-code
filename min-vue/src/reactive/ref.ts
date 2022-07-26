@@ -59,3 +59,21 @@ export function isRef (ref) {
 export function unRef (ref) {
   return isRef(ref) ? ref.value : ref
 }
+
+// 代理ref数据读取和更新
+export function proxyRefs (objectWithRef) {
+  return new Proxy(objectWithRef, {
+    get (target, key) {
+      // 判断当前读取的值是否是ref 做一个解包的操作
+      return unRef(target[key])
+    },
+    set(target, key, value) {
+      // 这边需要注意如果原始值是ref 但是新的值不是ref需要通过value去替换
+      if (isRef(target[key]) && !isRef(value)) {
+        return (target[key].value = value)
+      } else {
+        return Reflect.set(target, key, value)
+      }
+    }
+  })
+}
