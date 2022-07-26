@@ -6,12 +6,14 @@ class RefImpl {
   private _value: any
   private _raw: any // 保存原始对象
   private _deps: Set<any> // ref定义存储自己的依赖关系和effect类似
+  public _v_isRef: boolean = true // 定义当前是ref对象的标识
 
   constructor (value) {
     this._value = convert(value)
     this._raw = value
     this._deps = new Set()
   }
+
 
   get value () {
     
@@ -46,4 +48,14 @@ function convert (val) {
 // 所以ref会有.value的实现
 export function ref (value: any) {
   return new RefImpl(value)
+}
+
+// 判断是否是ref对象
+export function isRef (ref) {
+  return !!ref._v_isRef
+}
+
+// 返回ref的原始值
+export function unRef (ref) {
+  return isRef(ref) ? ref.value : ref
 }

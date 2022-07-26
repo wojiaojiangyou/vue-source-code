@@ -1,6 +1,6 @@
-import { ref } from '../ref'
+import { ref, isRef, unRef } from '../ref'
 import { effect } from '../effect'
-import { isReactive } from '../index'
+import { isReactive, reactive } from '../index'
 
 describe('ref', () => {
   it('happy path', () => {
@@ -47,5 +47,19 @@ describe('ref', () => {
     // 响应式对象更改值会变
     a.value.id = 2
     expect(curId).toBe(2)
+  })
+
+  it ('is ref', () => {
+    const a = ref(1)
+    const b = reactive({ a: 1 })
+    expect(isRef(a)).toBe(true)
+    expect(isRef(b)).toBe(false)
+    expect(isRef(1)).toBe(false)
+  })
+
+  it('unref', () => {
+    const a = ref(1)
+    expect(unRef(a)).toBe(1)
+    expect(1).toBe(1)
   })
 })
