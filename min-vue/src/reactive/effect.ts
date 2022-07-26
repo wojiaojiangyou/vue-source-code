@@ -12,7 +12,7 @@ function cleanupEffect (effect: any) {
 }
 
 // 定义更新函数存储对象
-class ReactiveEffect {
+export class ReactiveEffect {
   public deps: ReactiveEffect[] = [] // 存储依赖
   public onStop: Function | undefined  = undefined // 定义stop函数的前置调用
   public schedule: Function | undefined  = undefined // 存储更新调度方法
